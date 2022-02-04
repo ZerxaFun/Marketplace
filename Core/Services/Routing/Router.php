@@ -18,8 +18,7 @@ namespace Core\Services\Routing;
 
 
 
-use Core\Define;
-use Core\Services\Http\Header;
+use Core\Services\Http\Redirect;
 use Core\Services\Http\Request;
 use Core\Services\Http\Uri;
 use Core\Services\Path\Path;
@@ -35,6 +34,7 @@ use Route;
  */
 class Router
 {
+
 	/**
 	 * @var Module - активный модуль.
 	 */
@@ -57,57 +57,44 @@ class Router
 	 */
 	public static function initialize(): void
     {
-
 		# Загрузка роутера
 		static::routes();
+
+        $url = Uri::base() . '/' . Uri::segmentString();
 
 		# Поиск текущего маршрута
 		$route = Repository::retrieve(Request::method(), Uri::segmentString());
 
         # Если роутер не был передан.
         if (empty($route)) {
-            Header::code(500);
+            Redirect::go($url);
         }
 
 		# Создание модуля.
 		static::$module = $module = new Module($route);
 
 
-		# Подключение модуля к DI
+		# Подключение моделя к DI
 		DI::instance()->set('module', static::$module);
 
-		# Запуск модуля
+		# Запуск моделя
 		$response = $module->run();
-
 
 		# Получение ответа
 		if (is_object($response) && method_exists($response, 'respond')) {
             $response->respond();
         }
 
+		# Если есть макет для обработки, то подключаем его
+		$layout = $module->instance()->layout;
 
-        $path = new Path();
-        $manifest = $path->Module() . '/' . static::module()->module . '/manifest.json';
-
-        $moduleType = json_decode(file_get_contents($manifest), true, 512, JSON_THROW_ON_ERROR);
-
-        # Если есть макет для обработки, то подключаем его
-        if($moduleType['type'] === 'API') {
-            $data = $module;
-            $nuxt = $module->APIInstance->nuxt;
-            if ($data != '') {
-                $api = new API;
-                $api->data($data, $nuxt);
-            }
-
-        } else {
-            $data = $module->instance()->layout;
-            if ($data !== '') {
-                echo Layout::get($data);
-            }
+		# Вывод данных
+		if ($layout !== '') {
+            echo Layout::get($layout);
         }
 
-        DI::instance()->set('html', Layout::get($data));
+		# Выход
+		#Run::close();
 	}
 
 	/**
@@ -115,11 +102,9 @@ class Router
 	 */
     private static function routes(): void
     {
-        $path = new Path();
+
         $modules = Path::module();
 
-        Route::$module = 'Frontend';
-        require_once Path::module() . 'Frontend/routes.php';
 
         # Загружаем файл маршрутов из каждого модуля, в котором он есть.
         foreach (scandir($modules) as $module) {
@@ -130,11 +115,10 @@ class Router
 
             # Установка модуля
             Route::$module = $module;
-            $path = $modules . $module . DIRECTORY_SEPARATOR . 'routes.php';
-            # Если файл существует и доступен
-            if (is_file($path)) {
-                require_once $path;
 
+            # Если файл существует и доступен
+            if (is_file($path = $modules . $module . '/routes.php')) {
+                require_once $path;
             }
         }
 

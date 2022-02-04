@@ -61,6 +61,7 @@ class Define
      */
     private static function setDeveloper(): void
     {
+
         self::$developer = $_ENV['developer'];
     }
 

@@ -14,8 +14,10 @@
  */
 
 
-namespace Core\Service\Template\Theme;
+namespace Core\Services\Template\Theme;
 
+
+use Core\Services\Path\Path;
 
 /**
  * Class Theme
@@ -84,8 +86,8 @@ class Theme extends AbstractTheme
 
         if ($type !== "mjt") {
             $this->template = "Не разрешено имя шаблона: "
-                . str_replace(ROOT_DIR, '', $this->dir)
-                . "/" . $mjt_name;
+                . str_replace(Path::base(), '', $this->dir)
+                . $mjt_name;
 
             $this->copy_template = $this->template;
 
@@ -98,23 +100,23 @@ class Theme extends AbstractTheme
 
         if(stripos($mjt_name, ".php") !== false) {
             $this->template = "Недопустимое имя шаблона: "
-                . str_replace(ROOT_DIR, '', $this->dir)
-                . "/" . $mjt_name;
+                . str_replace(Path::base(), '', $this->dir)
+                . $mjt_name;
             $this->copy_template = $this->template;
 
             return "";
         }
 
-        if($mjt_name === '' || !file_exists($this->dir . "/" . $mjt_name)) {
+        if($mjt_name === '' || !file_exists($this->dir . $mjt_name)) {
             $this->template = "Шаблон не найден: "
-                . str_replace(ROOT_DIR, '', $this->dir)
-                . "/" . $mjt_name;
+                . str_replace(Path::base(), '', $this->dir)
+                . $mjt_name;
             $this->copy_template = $this->template;
 
             return "";
         }
 
-        $this->template = file_get_contents($this->dir . "/" . $mjt_name);
+        $this->template = file_get_contents($this->dir . $mjt_name);
 
         if (str_contains($this->template, "{*")) {
             $this->template = preg_replace("'{\\*(.*?)\\*}'si", '', $this->template);
@@ -153,12 +155,13 @@ class Theme extends AbstractTheme
      */
     public function sub_load_template($mjt_name)
     {
-        if ($mjt_name === '' || !file_exists($this->dir . DIRECTORY_SEPARATOR . $mjt_name)) {
+
+        if ($mjt_name === '' || !file_exists($this->dir . $mjt_name)) {
             die ("Невозможно загрузить шаблон: " . $mjt_name);
         }
 
 
-        return file_get_contents($this->dir . DIRECTORY_SEPARATOR . $mjt_name);
+        return file_get_contents($this->dir . $mjt_name);
     }
 
     /**

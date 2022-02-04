@@ -23,7 +23,8 @@ declare(strict_types=1);
 
 namespace Core\Services\Path;
 
-use Core\Services\Config\Config;
+use Core\Services\Container\DI;
+use Exception;
 
 /**
  *
@@ -88,7 +89,7 @@ class Path
      *
      * @var string
      */
-    private string $themeDir = 'themes';
+    private string $themeDir = 'Themes';
 
     /**
      * Директория плагинов
@@ -100,10 +101,17 @@ class Path
     public string $httpPath;
 
 
+    /**
+     * @throws Exception
+     */
     public function __construct()
     {
-        $this->basePath = Config::item('basePath', 'path');
-        $this->httpPath = $_SERVER['HTTP_HOST'];
+        $this->basePath = DI::instance()->get('baseDir');
+        if (!in_array('HTTP_HOST', $_SERVER, true)) {
+            $this->httpPath = '';
+        } else {
+            $this->httpPath = $_SERVER['HTTP_HOST'];
+        }
     }
 
     private static function instance(): Path

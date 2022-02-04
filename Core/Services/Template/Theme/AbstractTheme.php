@@ -14,7 +14,7 @@
  */
 
 
-namespace Core\Service\Template\Theme;
+namespace Core\Services\Template\Theme;
 
 
 /**

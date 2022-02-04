@@ -1,19 +1,22 @@
 <?php
 
 use Core\Define;
-use Core\Service\Auth\Auth;
-use Core\Service\Client\Client;
+use Core\Services\Auth\Auth;
+use Core\Services\Client\Client;
+use Core\Services\Path\Path;
+use Core\Services\Template\Theme\Theme;
 
-$themes = 'Content/Themes/Frontend/default';
+$themes = Path::theme('Frontend/default');
 $tpl = new Theme;
 $tpl->dir = $themes;
 $tpl->load_template('layout.mjt');
 
 # Структура шаблона
-$tpl->set('{BASE_URL}', Define::base());
-$tpl->set('{THEME}', Define::base() . '/' . $tpl->dir);
+$tpl->set('{BASE_URL}', Path::base());
+$tpl->set('{THEME}', '/Content/Themes/Frontend/default/');
 $tpl->set('{lang}', Client::language());
 $tpl->set('{content}', Layout::content());
+
 $tpl->set('{header}', $tpl->sub_load_template('header.mjt'));
 $tpl->set('{footer}', $tpl->sub_load_template('footer.mjt'));
 
@@ -31,12 +34,12 @@ $tpl->set('{keywords}', $data['keywords']);
  */
 $auth = new Auth();
 
-if( $auth::authorized() == true ) {
+if( $auth::authorized() === true ) {
     $tpl->set_block( "'\\[guest\\](.+?)\\[/guest\\]'si", "" );
     $tpl->set( '[user]', '' );
     $tpl->set( '[/user]', '' );
 
-} elseif ($auth::authorized() == false) {
+} elseif ($auth::authorized() === false) {
     $tpl->set_block ( "'\\[user\\](.*?)\\[/user\\]'si", "" );
     $tpl->set("[guest]", "");
     $tpl->set("[/guest]", "");

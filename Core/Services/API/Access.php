@@ -17,8 +17,8 @@
 namespace Core\Service\API;
 
 
-use Core\Service\Auth\Auth;
-use Core\Service\Http\Header;
+use Core\Services\Auth\Auth;
+use Core\Services\Http\Header;
 use JetBrains\PhpStorm\ArrayShape;
 
 

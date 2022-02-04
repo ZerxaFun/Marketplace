@@ -14,27 +14,29 @@
  */
 
 
-namespace Core\Service\Routing\API;
+namespace Core\Services\Routing\API;
 
 
-use Core\Service\Routing\RouteAbstract;
+use Core\Services\Routing\RouteAbstract;
 
 
 /**
  * Class APIRoute
- * @package Core\Service\Routing\API
+ * @package Core\Services\Routing\API
  */
 class APIRoute extends RouteAbstract
 {
+
+    public string $assets;
     /**
      * Устанавливает маршрут GET.
      *
-     * @param string $method
+     * @param $method
      * @param string $uri - URI для маршрутизации.
      * @param array $options - варианты маршрута.
      * @return bool
      */
-    public static function api(string $method, string $uri, array $options): bool
+    public static function api($method, string $uri, array $options): bool
     {
         return static::add($method, $uri, $options);
     }

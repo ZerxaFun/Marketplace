@@ -18,7 +18,6 @@ namespace Core\Services\Http;
 
 
 use Core\Define;
-use JetBrains\PhpStorm\Pure;
 
 /**
  * Класс для работы с URL
@@ -33,20 +32,20 @@ class Uri
      *
      * @var string
      */
-    private static string $base = '';
+    protected static string $base = '';
 
     /**
      * Активный URL пользователя
      *
      * @var string
      */
-    private static string $uri = '';
+    protected static string $uri = '';
 
     /**
      * Получение сегментов URL в виде массива
      * @var array
      */
-    private static array $segments = [];
+    protected static array $segments = [];
 
     /**
      * Инициализируйте класс URI.
@@ -55,9 +54,10 @@ class Uri
      */
     public static function initialize(): void
     {
+
 		# Нам нужно получить различные разделы из URI для обработки
 		# правильный маршрут.
-         header('X-Powered-By: ' . Define::NAME_HEAD);
+       # header('X-Powered-By: ' . Define::NAME_HEAD);
         # Стандартный запрос в браузере?
         if (isset($_SERVER['REQUEST_URI'])) {
             # Получить активный URI.
@@ -69,8 +69,8 @@ class Uri
 
             # Создаем сегменты URI.
             $length     = strlen($base);
-            $str        = substr($uri, $length);
-            $arr        = explode('/', trim($str, '/'));
+            $str        = (string) substr($uri, $length);
+            $arr        = (array) explode('/', trim($str, '/'));
             $segments   = [];
 
             foreach ($arr as $segment) {
@@ -127,10 +127,12 @@ class Uri
     }
 
     /**
-     * @param string $uri
+     * Возвращает URL встроенного сайта.
+     *
+     * @param  string  $uri - URI для добавления на базу.
      * @return string
      */
-    #[Pure] final protected function url(string $uri = ''): string
+    public function url(string $uri = ''): string
 	{
         return static::base() . ltrim($uri, '/');
     }
@@ -161,6 +163,6 @@ class Uri
      */
     public static function segmentString(): string
 	{
-        return implode('/', static::$segments);
+        return (string) implode('/', static::$segments);
     }
 }

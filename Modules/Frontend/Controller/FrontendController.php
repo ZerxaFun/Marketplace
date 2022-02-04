@@ -3,10 +3,11 @@
 namespace Modules\Frontend\Controller;
 
 use Controller;
-use Core\Service\Client\Client;
-use Core\Service\Localization\I18n;
-use Core\Service\Localization\Language;
-use Core\Service\Routing\Router;
+
+use Core\Services\Client\Client;
+use Core\Services\Localization\I18n;
+use Core\Services\Localization\Language;
+use Core\Services\Routing\Router;
 use DI;
 use Modules\Frontend;
 use Exception;

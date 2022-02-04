@@ -33,7 +33,7 @@ abstract class AbstractHeader
      * в формате 'ключ' => 'значение', к примеру
      * 'json' => 'application/json'
      *
-     * @var array - тип HTTP запроса к маршруту
+     * @var array - тип HTTP запроса к роутеру
      */
     protected array $type = [
         'html'      =>  'text/html',        # 	text/html           - .html

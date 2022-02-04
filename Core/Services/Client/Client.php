@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Core\Service\Client;
+namespace Core\Services\Client;
 
 
-use Core\Service\Localization\Language;
+use Core\Services\Localization\Language;
 use DI;
 
 

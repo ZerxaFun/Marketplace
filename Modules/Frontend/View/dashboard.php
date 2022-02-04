@@ -1,5 +1,7 @@
 <?php
 
+use Core\Services\Template\Theme\Theme;
+
 $tpl = new Theme;
 $tpl->dir = 'Content/Themes/Frontend/default/';
 $tpl->load_template('dashboard.mjt');

@@ -4,8 +4,8 @@
 namespace Modules\Frontend\Model;
 
 
-use Core\Service\Orm\Model;
-use Core\Service\Orm\Query;
+use Core\Services\Orm\Model;
+use Core\Services\Orm\Query;
 
 class UserModel extends Model
 {

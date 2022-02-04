@@ -19,13 +19,13 @@ namespace Core\Services\Routing;
 
 /**
  * Class Repository
- * @package Core\Service\Routing
+ * @package Core\Services\Routing
  */
 class Repository {
     /**
      * @var array - хранимые маршруты.
      */
-    private static array $stored = [
+    protected static array $stored = [
         'get'       => [],
         'post'      => [],
         'put'       => [],
@@ -53,7 +53,6 @@ class Repository {
      */
     public static function store(string $method, string $uri, array $options): void
     {
-
         static::$stored[$method][$uri] = $options;
     }
 

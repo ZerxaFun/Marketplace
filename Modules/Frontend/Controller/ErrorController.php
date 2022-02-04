@@ -3,7 +3,7 @@
 namespace Modules\Frontend\Controller;
 
 
-use Core\Service\Http\Header;
+use Core\Services\Http\Header;
 use View;
 
 
@@ -23,7 +23,7 @@ class ErrorController extends FrontendController
      */
     public function page404(): View
     {
-        Header::code(404);
+        Header::code404();
         # Данные массива $data
         $this->setData('title', 'Ошибка 404, страница не найдена');
         $this->setData('description', 'Ошибка 404, страница не найдена!');

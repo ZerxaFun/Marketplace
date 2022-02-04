@@ -14,13 +14,14 @@
  */
 
 
-namespace Core\Service\API;
+namespace Core\Services\API;
 
 
-use Core\Service\Http\Header;
-use Core\Service\Http\Request;
-use Core\Service\Http\Uri;
-use Core\Service\Routing\Router;
+use Core\Service\API\Access;
+use Core\Services\Http\Header;
+use Core\Services\Http\Request;
+use Core\Services\Http\Uri;
+use Core\Services\Routing\Router;
 use JetBrains\PhpStorm\NoReturn;
 use JsonException;
 

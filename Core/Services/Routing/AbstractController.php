@@ -19,7 +19,7 @@ namespace Core\Services\Routing;
 
 /**
  * Class AbstractController
- * @package Core\Service\Routing
+ * @package Core\Services\Routing
  */
 abstract class AbstractController
 {
@@ -28,8 +28,14 @@ abstract class AbstractController
      */
     public string $layout = '';
 
+    public bool $vue = false;
     /**
      * @var array - массив data
      */
     public array $data = [];
+
+    /**
+     * @var string
+     */
+    public string $theme = '';
 }

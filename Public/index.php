@@ -4,6 +4,7 @@
 use Core\Bootstrap;
 use Core\Services\Debug\Bar\JavascriptRenderer;
 use Core\Services\Debug\Bar\ToolBar;
+use Core\Services\Routing\Module;
 
 /**
  *=====================================================
@@ -22,7 +23,9 @@ use Core\Services\Debug\Bar\ToolBar;
  */
 
 
-require __DIR__ . '/../vendor/autoload.php';
-require __DIR__ . '/../Core/functions/dump.php';
+require '../vendor/autoload.php';
 
-Bootstrap::run();
+
+Bootstrap::run(
+    dirname(__DIR__)
+);

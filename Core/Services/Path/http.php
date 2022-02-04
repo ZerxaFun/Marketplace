@@ -138,7 +138,7 @@ class http
         $validate = array_key_exists($fileType, self::$access) ?? false;
 
         if($validate === true) {
-            return $validate;
+            return true;
         }
 
         throw new ErrorException(

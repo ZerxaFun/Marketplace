@@ -69,7 +69,7 @@ final class Config
      */
     private static function file(string $group = 'main'): void
     {
-        $path =  '../config' . DIRECTORY_SEPARATOR . $group . '.php';
+        $path =  '../Config' . DIRECTORY_SEPARATOR . $group . '.php';
 
         /**
          * Проверка, действительно ли существует файл

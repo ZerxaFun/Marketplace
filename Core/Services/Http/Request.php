@@ -17,33 +17,30 @@
 namespace Core\Services\Http;
 
 
-use JetBrains\PhpStorm\Pure;
-
 /**
  * Class Request
  * @package Core\Services\Http
  */
 class Request
 {
-    public static array $method = [
-        'GET',  'POST',
-        'HEAD', 'PUT',
-        'PATH', 'DELETE',
-    ];
     /**
      * Проверка, является ли запрос определенным методом.
      *
      * @param  string  $method - Метод запроса для проверки.
      * @return bool
      */
-    #[Pure] public static function is(string $method = ''): bool
+    public static function is(string $method): bool
 	{
-        return match (strtolower($method)) {
-            'https' => self::https(),
-            'ajax' => self::ajax(),
-            'cli' => self::cli(),
-            default => $method === self::method(),
-        };
+        switch (strtolower($method)) {
+            case 'https':
+                return self::https();
+            case 'ajax':
+                return self::ajax();
+            case 'cli':
+                return self::cli();
+            default:
+                return $method === self::method();
+        }
     }
 
     /**

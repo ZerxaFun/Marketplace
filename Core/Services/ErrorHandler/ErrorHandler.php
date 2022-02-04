@@ -14,7 +14,6 @@ namespace Core\Services\ErrorHandler;
 
 
 use Core\Define;
-use Core\Services\Container\DI;
 use Core\Services\Path\Path;
 use ErrorException;
 use Exception;
@@ -43,6 +42,7 @@ class ErrorHandler
      */
     public function __construct()
     {
+
         set_error_handler('Core\Services\ErrorHandler\ErrorHandler::error');
         register_shutdown_function('Core\Services\ErrorHandler\ErrorHandler::fatal');
         set_exception_handler('Core\Services\ErrorHandler\ErrorHandler::exception');
@@ -148,14 +148,14 @@ class ErrorHandler
             '<span style="color: #0000BB">&lt;?php&nbsp;',
             '<span style="color: #0000BB">',
             '<span style="color: #007700">',
-            );
+        );
         $replace = array('', '', '', '',
             '', '',
             '/*',
             '<span style="color: #a626a4">',
             '<span style="color: #4078f2">',
             '<span style="color: #a626a4">',
-            );
+        );
 
         return str_replace($search, $replace, highlight_string('<?php ' . str_replace('/*', '#$@r4!/*', $string), true));
     }
@@ -300,7 +300,7 @@ class ErrorHandler
             // Send headers and output
             @header('Content-Type: text/html; charset=UTF-8');
 
-            if (Define::isDeveloper()) {
+            if (Define::isDeveloper() === true) {
 
                 $error['backtrace'] = $exception->getTrace();
 
@@ -312,12 +312,12 @@ class ErrorHandler
                 $error['highlighted'] = self::highlightCode($error['file'], $error['line']);
 
                 @header('HTTP/1.1 500 Internal Server Error');
-                include Path::module('Error/View/') . 'ErrorHandler.php';
+                include sprintf("%sErrorHandler.php", Path::module('Error' . DIRECTORY_SEPARATOR . 'View'));
 
-            } else {
+            } elseif(Define::isDeveloper() === false) {
 
                 @header('HTTP/1.1 500 Internal Server Error');
-                include Path::module('Error/View/') . '500.php';
+                include sprintf("%s500.php", Path::module('Error/View/'));
             }
 
         } catch (Exception $e) {

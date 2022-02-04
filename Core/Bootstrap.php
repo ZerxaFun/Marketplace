@@ -24,7 +24,7 @@ namespace Core;
 
 use Core\Application\SystemEnvironmentAnalysis\SEA;
 use Core\Services\Container\DI;
-#use Core\Services\Database\Database;
+use Core\Services\Database\Database;
 use Core\Services\Environment\Dotenv;
 use Core\Services\ErrorHandler\ErrorHandler;
 use Core\Services\Http\Uri;
@@ -42,8 +42,11 @@ class Bootstrap
     /**
      * @throws Exception
      */
-    public static function run(): void
+    public static function run(string $pathApplication): void
     {
+        DI::instance()->set('baseDir', $pathApplication);
+
+
         /**
          * Загрузка классов необходимых для работы
          */
@@ -53,21 +56,6 @@ class Bootstrap
         class_alias(Route::class, 'Route');
         class_alias(Query::class, 'Query');
         class_alias(View::class, 'View');
-        /**
-         * Правильный вывод ошибок
-         */
-        ErrorHandler::initialize();
-        /**
-         * Парсинг .env файлов окружения
-         */
-        Dotenv::initialize();
-
-
-
-        Router::initialize();
-
-
-        SEA::folder();
 
         /**
          * Инициализация URI.
@@ -75,9 +63,25 @@ class Bootstrap
         Uri::initialize();
 
         /**
+         * Правильный вывод ошибок
+         */
+        ErrorHandler::initialize();
+
+        /**
+         * Парсинг .env файлов окружения
+         */
+        Dotenv::initialize();
+
+        /**
+         * Подключение MVC паттерна
+         */
+        Router::initialize();
+
+        /**
          * Подключение к базе данных.
          */
-        #Database::initialize();
+        Database::initialize();
+
         /**
          * Инициализация сессий.
          */

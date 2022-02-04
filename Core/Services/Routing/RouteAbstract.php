@@ -19,7 +19,7 @@ namespace Core\Services\Routing;
 
 /**
  * Class RouteAbstract
- * @package Core\Service\Routing
+ * @package Core\Services\Routing
  */
 abstract class RouteAbstract
 {
@@ -34,7 +34,7 @@ abstract class RouteAbstract
     public static string $module;
 
     /**
-     * Добавление роута.
+     * Sets a route.
      *
      * @param  string  $method - метод маршрута,
      * @param  string  $uri - URI для маршрутизации.
@@ -55,7 +55,6 @@ abstract class RouteAbstract
 
             return true;
         }
-
         return false;
     }
 

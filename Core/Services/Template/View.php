@@ -23,6 +23,7 @@ use Core\Services\Routing\Router;
 use Exception;
 use JetBrains\PhpStorm\Pure;
 use RuntimeException;
+use const EXTR_OVERWRITE;
 
 
 /**
@@ -90,7 +91,7 @@ class View
 		$instance = Router::module()->instance();
 
 		# Если у нас нет макета, то напрямую выводим представление.
-		if (is_object($instance) && isset($instance->layout) && $instance->layout === '') {
+		if (isset($instance->layout) && $instance->layout === '') {
             echo $this->render();
         } else {
 		    Layout::view($this);
@@ -137,7 +138,7 @@ class View
     {
 
         # Проверка, что данные доступны в виде переменных.
-        extract($data, null);
+        extract($data);
         # Проверка, существует ли файл.
         if (is_file($path)) {
 

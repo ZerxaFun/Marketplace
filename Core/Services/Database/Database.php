@@ -19,7 +19,6 @@ namespace Core\Services\Database;
 
 use PDO;
 use PDOException;
-use Core\Services\Config\Config;
 use Exception;
 use RuntimeException;
 

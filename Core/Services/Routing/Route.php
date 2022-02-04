@@ -19,7 +19,7 @@ namespace Core\Services\Routing;
 
 /**
  * Class Route
- * @package Core\Service\Routing
+ * @package Core\Services\Routing
  */
 class Route extends RouteAbstract
 {

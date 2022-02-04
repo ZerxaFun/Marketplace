@@ -16,16 +16,18 @@
 
 namespace Core\Services\Routing;
 
+
+use Core\Services\API\API;
 use Core\Services\Http\Header;
-use Core\Services\Path\Path;
 use Exception;
 use Core\Services\Config\Config;
 use RuntimeException;
+use Setting;
 
 
 /**
  * Class Module
- * @package Core\Service\Routing
+ * @package Core\Services\Routing
  */
 class Module
 {
@@ -35,14 +37,9 @@ class Module
     protected Controller $instance;
 
     /**
-     * @var APIController - контроллер.
-     */
-    public APIController $APIInstance;
-
-    /**
      * @var mixed - ответ действий.
      */
-    protected mixed $response;
+    protected $response;
 
     /**
      * @var string - активный модуль.
@@ -69,6 +66,12 @@ class Module
      */
     public string $theme = '';
 
+
+    /**
+     * @var string
+     */
+    public string $viewPath = '';
+
     /**
      * @var string|null - права доступа к разделу
      */
@@ -82,22 +85,23 @@ class Module
     public function __construct(array $config = [])
     {
         $header = new Header();
-        if($config === []) {
-            $config = [
-                "controller" => "ErrorController",
-                "action" => "page500",
-                "module" => "Error"
-            ];
-        }
+
         foreach ($config as $key => $value) {
             $this->$key = $value;
         }
+
+       # $header->header($config['header']);
+
         /**
          * Если модуль - API, то удаляем ненужных переменных и выводим специальный заголовок JSON
          */
         if($config['module'] === 'API') {
-            Header::allowAPI();
-            $header->header('html');
+            unset($this->viewPath, $this->theme, $this->response);
+
+            $API = new API();
+
+            $header->header('json');
+            $API->assets($this);
         }
 
     }
@@ -113,6 +117,30 @@ class Module
     }
 
     /**
+     * @return string
+     * @throws Exception
+     */
+    public function url(): string
+    {
+        return Config::item('base_url') . DIRECTORY_SEPARATOR . 'Modules' . DIRECTORY_SEPARATOR . $this->module . DIRECTORY_SEPARATOR;
+    }
+
+
+    /**
+     * @return string
+     * @throws Exception
+     */
+    public function urlTheme(): string {
+        $theme = Setting::value('active_theme', 'theme');
+
+        if ($theme === '') {
+            $theme = Config::item('defaultTheme');
+        }
+
+        return Config::item('base_url') . DIRECTORY_SEPARATOR . 'Content' . DIRECTORY_SEPARATOR . 'themes' .  DIRECTORY_SEPARATOR . $theme . DIRECTORY_SEPARATOR;
+    }
+
+    /**
      * Запускает активное действие контроллера.
      *
      * @throws Exception
@@ -124,24 +152,12 @@ class Module
          */
         $class = '\\Modules\\' . $this->module . '\Controller\\' . $this->controller;
 
-
         /**
          * Проверка на существование класса.
          */
-        $path = new Path();
-        $manifest = $path->Module() . '/' . $this->module . '/manifest.json';
-
-        $moduleType = json_decode(file_get_contents($manifest), true, 512, JSON_THROW_ON_ERROR);
-
-
         if (class_exists($class)) {
-            if($moduleType['type'] === 'API') {
-                $this->APIInstance = new $class;
-                $this->response = call_user_func_array([$this->APIInstance, $this->action], $this->parameters);
-            } elseif($moduleType['type'] === 'module') {
-                $this->instance = new $class;
-                $this->response = call_user_func_array([$this->instance, $this->action], $this->parameters);
-                  }
+            $this->instance = new $class;
+            $this->response = call_user_func_array([$this->instance, $this->action], $this->parameters);
 
             /**
              * Возвращение ответа.

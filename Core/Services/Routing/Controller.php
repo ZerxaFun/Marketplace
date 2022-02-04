@@ -19,7 +19,7 @@ namespace Core\Services\Routing;
 
 /**
  * Class Controller
- * @package Core\Service\Routing
+ * @package Core\Services\Routing
  */
 class Controller extends AbstractController
 {

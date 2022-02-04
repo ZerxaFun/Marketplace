@@ -25,11 +25,6 @@ namespace Core\Services\Http;
  */
 class Header extends AbstractHeader
 {
-    public static function code(int $code): int
-    {
-        return http_response_code($code);
-    }
-
     /**
      * Обработка отправки запроса Content Type страницы
      * $header принимает string, но в случаи пустого
@@ -37,9 +32,9 @@ class Header extends AbstractHeader
      * этого необходимо проводить проверку, пустое
      * ли поле заголовка страницы
      *
-     * @param string $header - заголовок страницы
+     * @param mixed $header - заголовок страницы
      */
-    final public function header(string $header = ''): void
+    public function header ($header = ''): void
     {
         if(array_key_exists($header, $this->type) === false) {
             $header = 'html';
@@ -60,16 +55,6 @@ class Header extends AbstractHeader
     }
 
     /**
-     * Отправка кода 403, страница не найдена
-     *
-     * @return void
-     */
-	public static function code403(): void
-    {
-        header('HTTP/1.1 403 Forbidden');
-	}
-
-    /**
      * Отправка кода 404, страница не найдена
      *
      * @return void
@@ -79,12 +64,4 @@ class Header extends AbstractHeader
 		header('HTTP/1.1 404 Not Found');
 	}
 
-	public static function allowAPI(): void
-    {
-        header('Access-Control-Allow-Origin: *');
-        header('Access-Control-Allow-Headers: *, Authorization');
-        header('Access-Control-Allow-Methods: *');
-        header('Access-Control-Allow-Credentials: ture');
-
-    }
 }
