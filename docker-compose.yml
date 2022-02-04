@@ -1,0 +1,143 @@
+version: "3.8"
+
+networks:
+  markepplace.network:
+    driver: bridge
+
+services:
+  php:
+    build: ./Docker/Addons/PHP
+    restart: always
+    tty: true
+    container_name: markepplace.php
+    depends_on:
+     - mysql
+    # - postgres
+    # - redis
+    # - mariadb
+    networks:
+      - markepplace.network
+    ports:
+      - "9000:9000"
+    volumes:
+      - .:/var/www/app.dev
+
+  nginx:
+    build: ./Docker/Addons/Nginx
+    container_name: markepplace.nginx
+    restart: always
+    tty: true
+    depends_on:
+      - php
+      - mysql
+      # - postgres
+      # - redis
+      # - mariadb
+    ports:
+      - "80:80"
+      - "433:433"
+    volumes:
+      - .:/var/www/app.dev
+    networks:
+      - markepplace.network
+
+  # apache:
+  #   build: ./Docker/Addons/Apache
+  #   restart: always
+  #   container_name: markepplace.apache
+  #   networks:
+  #     - markepplace.network
+  #   depends_on:
+  #     - php
+  #     # - mysql
+  #     # - postgres
+  #     # - redis
+  #     # - mariadb
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - .:/var/www/app.dev
+
+  #  mariadb:
+  #    image: mariadb
+  #    tty: true
+  #    restart: always
+  #    container_name: markepplace.mariadb
+  #    networks:
+  #      - markepplace.network
+  #    ports:
+  #      - '3306:3306'
+  #    volumes:
+  #      - './Docker/Addons/MySQL/mariadb.cnf:/etc/mysql/conf.d/custom.cnf:ro'
+  #      - './Docker/DataBase:/var/lib/mysql'
+  #    environment:
+  #      - MYSQL_PASSWORD=${db_password}
+  #      - MYSQL_ROOT_PASSWORD=${db_password}
+  #      - MYSQL_DATABASE=${db_driver}
+
+  mysql:
+    build: ./Docker/Addons/MySQL
+    tty: true
+    restart: always
+    container_name: markepplace.mysql
+    networks:
+      - markepplace.network
+    ports:
+      - "3306:3306"
+    volumes:
+      - "./Docker/Addons/MySQL/mysql.cnf:/etc/mysql/conf.d/custom.cnf:ro"
+      - "./Docker/DataBase:/var/lib/mysql"
+    environment:
+      - MYSQL_PASSWORD=${db_password}
+      - MYSQL_ROOT_PASSWORD=${db_password}
+      - MYSQL_DATABASE=${db_driver}
+
+  phpmyadmin:
+    image: library/phpmyadmin
+    container_name: markepplace.phpmyadmin
+    tty: true
+    networks:
+      - markepplace.network
+    depends_on:
+      - mysql
+      - mariadb
+    environment:
+      PMA_USER: ${db_username}
+      PMA_PASSWORD: ${db_password}
+      PMA_HOSTS: mysql
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    ports:
+      - '8080:80'
+
+  # postgres:
+  #   build: ./Docker/Addons/Postgres
+  #   container_name: markepplace.postgres
+  #   tty: true
+  #   restart: always
+  #   networks:
+  #     - markepplace.network
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - "./docker/postgres/dbdata:/var/lib/postgresql/data"
+  #   environment:
+  #     - POSTGRES_USER=root
+  #     - POSTGRES_PASSWORD=root
+  #     - POSTGRES_DB=development
+
+  # redis:
+  #   image: bitnami/redis:latest
+  #   restart: always
+  #   tty: true
+  #   container_name: markepplace.redis
+  #   volumes:
+  #     - ./docker/redis:/bitnami/redis/data
+  #   networks:
+  #     - markepplace.network
+  #   environment:
+  #     - ALLOW_EMPTY_PASSWORD=no
+  #     - REDIS_PASSWORD=root
+  #   ports:
+  #     - "6379:6379"

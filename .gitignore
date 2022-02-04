@@ -1,0 +1,9 @@
+.idea/
+/node_modules/
+composer.lock
+composer.phar
+
+/Resources/
+/vendor/
+
+/Docker/

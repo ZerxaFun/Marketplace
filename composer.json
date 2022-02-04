@@ -1,0 +1,24 @@
+{
+    "name": "majestic/react-fox",
+    "description": "React Fox a PHP framework for personal web-site, REST API service, CLI application and other project",
+    "autoload": {
+        "psr-4": {
+            "Core\\": "Core/",
+            "Modules\\": "Modules/"
+        },
+        "files": [
+            "Core/Function/devdump.php"
+        ]
+    },
+    "authors": [
+        {
+            "name": "ZerxaFun aKa Zerxa",
+            "email": "ZerxaFun@gmail.com"
+        }
+    ],
+    "require": {
+      "ext-mbstring": "*",
+      "ext-pdo": "*"
+    },
+    "require-dev": {}
+}
